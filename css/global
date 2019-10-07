@@ -11,9 +11,13 @@ body {
   line-height: 1.5;
 }
 
+.wrapper {
+  padding: 0 15px;
+}
+
 #myCanvas {
-  max-width: 320px;
-  height: 160px;
+  max-width: 100%;
   display: block;
-  margin: 0 auto;
+  margin: 60px auto;
+  border: 1px solid #ccc;
 }
