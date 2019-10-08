@@ -51,8 +51,17 @@ function run() {
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
       dx = -dx;
     }
-    if (y + dy > canvas.height - ballRad || y + dy < ballRad) {
+    if (y + dy < ballRad) {
       dy = -dy;
+    }
+    else if (y + dy > canvas.height - ballRad) {
+      if (x > paddX && x < paddX + paddWidth) {
+        dy = -dy;
+      }
+      else {
+        alert("GAME OVER");
+        document.location.reload();
+      }
     }
     
     //Paddle movement
