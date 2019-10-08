@@ -22,6 +22,27 @@ function run() {
   let paddWidth = 75;
   let paddX = (canvas.width - paddWidth) / 2;
   
+  //Bricks
+  let brickRows = 3;
+  let brickColumns = 5;
+  let brickWidth = 75;
+  let brickHeight = 20;
+  let brickPadding = 10;
+  let brickOffsetTop = 30;
+  let brickOffsetLeft = 30;
+  
+  let bricks = [];
+  
+  for (let col = 0; col < brickColumns; col++) {
+    bricks[col] = [];
+    for (let row = 0; row < brickRows; row++) {
+      bricks[col][row] = {
+        x : 0,
+        y : 0
+      };
+    }
+  }
+  
   //Controls
   let rightKey = false;
   let leftKey = false;
@@ -42,6 +63,7 @@ function run() {
     //Draw objects
     drawBall();
     drawPadd();
+    drawBricks();
     
     //Ball Displacement :: movement
     x += dx;
@@ -87,6 +109,24 @@ function run() {
     ctx.fillStyle = "#8c008c";
     ctx.fill();
     ctx.closePath();
+  }
+  
+  function drawBricks() {
+    for (let col = 0; col < brickColumns; col++) {
+      for (let row = 0; row < brickRows; row++) {
+        let brickX = (col * (brickWidth + brickPadding)) + brickOffsetLeft;
+        let brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
+      
+        bricks[col][row].x = 0;
+        bricks[col][row].y = 0;
+        
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = "#8c008c";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
   }
   
   function keyDownFn(evt) {
