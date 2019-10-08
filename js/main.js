@@ -30,13 +30,11 @@ function run() {
   let time = 10;
   let canvasDraw = setInterval(draw, time);
   
-  //Listeners
-  
+  //Listeners  
   document.addEventListener("keydown", keyDownFn, false);
   document.addEventListener("keyup", keyUpFn, false);
   
-  //Functions
-  
+  //Functions  
   function draw() {
     //Clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
