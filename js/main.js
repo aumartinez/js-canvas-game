@@ -10,16 +10,32 @@ function run() {
   let x = canvas.width / 2;
   let y = canvas.height - 30;
   
-  console.log(canvas.width);
-  console.log(canvas.height);
-  
   //Displacement differential
   let dx = 2;
   let dy = -2;
   
+  //Ball  
   let ballRad = 8;
   
-  let canvasDraw = setInterval(draw, 10);
+  //Paddle
+  let paddHeight = 10;
+  let paddWidth = 75;
+  let paddX = (canvas.width - paddWidth) / 2;
+  
+  //Controls
+  let rightKey = false;
+  let leftKey = false;
+  
+  //Canvas redraw
+  let time = 10;
+  let canvasDraw = setInterval(draw, time);
+  
+  //Listeners
+  
+  document.addEventListener("keydown", keyDownFn, false);
+  document.addEventListener("keyup", keyUpFn, false);
+  
+  //Functions
   
   function draw() {
     //Clear canvas
@@ -42,9 +58,47 @@ function run() {
   
   function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, ballRad, 0, Math.PI*2);
+    ctx.arc(x, y, ballRad, 0 * Math.PI, 2 * Math.PI);
     ctx.fillStyle = "#8c008c";
     ctx.fill();
     ctx.closePath();
+  }
+  
+  function drawPadd() {
+    ctx.beginPath();
+    ctx.rect(paddX, canvas.height - paddHeight, paddWidth, paddHeight);
+    ctx.fillStyle = "#8c008c";
+    ctx.fill();
+    ctx.closePath();
+  }
+  
+  function keyDownFn(evt) {
+    switch (evt.keyCode) {
+      case 39: //Right key
+      rightKey = true;
+      break;
+      
+      case 37: //Left key
+      leftKey = true;
+      break;
+      
+      default:
+      return false;
+    }
+  }
+  
+  function keyUpFn(evt) {
+    switch (evt.keyCode) {
+      case 39: //Right key
+      rightKey = false;
+      break;
+      
+      case 37: //Left key
+      leftKey = false;
+      break;
+      
+      default:
+      return false;
+    }
   }
 }
