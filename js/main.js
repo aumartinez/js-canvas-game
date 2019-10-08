@@ -39,19 +39,29 @@ function run() {
     //Clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
     
-    //Draw ball
+    //Draw objects
     drawBall();
+    drawPadd();
     
-    //Displacement :: movement
+    //Ball Displacement :: movement
     x += dx;
     y += dy;
     
+    //Ball boundaries
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
       dx = -dx;
     }
     if (y + dy > canvas.height - ballRad || y + dy < ballRad) {
       dy = -dy;
-    }    
+    }
+    
+    //Paddle movement
+    if (rightKey && paddX < canvas.width - paddWidth) {
+      paddX += 7;
+    }
+    if (leftKey && paddX > 0) {
+      paddX -= 7;
+    }
   }
   
   function drawBall() {
