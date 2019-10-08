@@ -5,24 +5,37 @@ window.addEventListener("load", run, false);
 function run() {
   let canvas = document.getElementById("myCanvas");
   let ctx = canvas.getContext("2d");
+  
+  //Start position
   let x = canvas.width / 2;
   let y = canvas.height - 30;
+  
+  console.log(canvas.width);
+  console.log(canvas.height);
+  
+  //Displacement differential
   let dx = 2;
   let dy = -2;
-  let ballRad = 10;
   
-  setInterval(draw, 10);
+  let ballRad = 8;
+  
+  let canvasDraw = setInterval(draw, 10);
   
   function draw() {
+    //Clear canvas
     ctx.clearRect(0,0, canvas.width, canvas.height);
+    
+    //Draw ball
     drawBall();
+    
+    //Displacement :: movement
     x += dx;
     y += dy;
     
-    if (x + dx > canvas.width || x + dx < 0) {
+    if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
       dx = -dx;
     }
-    if (y + dy > canvas.height || y + dy < 0) {
+    if (y + dy > canvas.height - ballRad || y + dy < ballRad) {
       dy = -dy;
     }    
   }
