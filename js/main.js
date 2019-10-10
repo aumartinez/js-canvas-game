@@ -48,8 +48,7 @@ function run() {
   let rightKey = false;
   let leftKey = false;
   
-  //Score
-  
+  //Score  
   let score = 0;
   
   //Canvas redraw
@@ -177,7 +176,7 @@ function run() {
   function collDetection() {    
     for (let col = 0; col < brickColumns; col++) {
       for (let row = 0; row < brickRows; row++) {
-        let b = bricks[col][row];
+        let b = bricks[col][row];        
         
         //Brick is hit and removed
         if (b.status == 1 && x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
@@ -185,7 +184,7 @@ function run() {
             b.status = 0;
             score += 5;
             
-            if ((score / 5) == brickRow * brickColumns) {
+            if ((score / 5) == brickRows * brickColumns) {
               alert("GAME CLEARED");
               document.location.reload();
             }
