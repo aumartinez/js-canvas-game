@@ -48,6 +48,10 @@ function run() {
   let rightKey = false;
   let leftKey = false;
   
+  //Score
+  
+  let score = 0;
+  
   //Canvas redraw
   let time = 10;
   let canvasDraw = setInterval(draw, time);
@@ -66,6 +70,7 @@ function run() {
     drawPadd();
     drawBricks();  
     collDetection();
+    drawScore();
     
     //Ball boundaries
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
@@ -133,6 +138,12 @@ function run() {
     }
   }
   
+  function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#8c008c";
+    ctx.fillText("Score: " + score, 8, 20);
+  }
+  
   function keyDownFn(evt) {
     switch (evt.keyCode) {
       case 39: //Right key
@@ -171,7 +182,13 @@ function run() {
         //Brick is hit and removed
         if (b.status == 1 && x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
             dy = -dy;
-            b.status = 0;        
+            b.status = 0;
+            score += 5;
+            
+            if ((score / 5) == brickRow * brickColumns) {
+              alert("GAME CLEARED");
+              document.location.reload();
+            }
         }
       }
     }
