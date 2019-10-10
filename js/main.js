@@ -38,7 +38,8 @@ function run() {
     for (let row = 0; row < brickRows; row++) {
       bricks[col][row] = {
         x : 0,
-        y : 0
+        y : 0,
+        status : 1
       };
     }
   }
@@ -63,7 +64,8 @@ function run() {
     //Draw objects
     drawBall();
     drawPadd();
-    drawBricks();
+    drawBricks();  
+    collDetection();
     
     //Ball Displacement :: movement
     x += dx;
@@ -114,17 +116,19 @@ function run() {
   function drawBricks() {
     for (let col = 0; col < brickColumns; col++) {
       for (let row = 0; row < brickRows; row++) {
-        let brickX = (col * (brickWidth + brickPadding)) + brickOffsetLeft;
-        let brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
-      
-        bricks[col][row].x = 0;
-        bricks[col][row].y = 0;
+        if (bricks[col][row].status == 1) {
+          let brickX = (col * (brickWidth + brickPadding)) + brickOffsetLeft;
+          let brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
         
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#8c008c";
-        ctx.fill();
-        ctx.closePath();
+          bricks[col][row].x = brickX;
+          bricks[col][row].y = brickY;
+          
+          ctx.beginPath();
+          ctx.rect(brickX, brickY, brickWidth, brickHeight);
+          ctx.fillStyle = "#8c008c";
+          ctx.fill();
+          ctx.closePath();
+        }
       }
     }
   }
@@ -156,6 +160,20 @@ function run() {
       
       default:
       return false;
+    }
+  }
+    
+  function collDetection() {
+    console.log("run");
+    for (let col = 0; col < brickColumns; col++) {
+      for (let row = 0; row < brickRows; row++) {
+        let b = bricks[col][row];
+        
+        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {          
+          dy = -dy;
+          b.status = 0;
+        }
+      }
     }
   }
 }
