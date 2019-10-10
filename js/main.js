@@ -41,7 +41,7 @@ function run() {
         y : 0,
         status : 1
       };
-    }
+    }    
   }
   
   //Controls
@@ -67,10 +67,6 @@ function run() {
     drawBricks();  
     collDetection();
     
-    //Ball Displacement :: movement
-    x += dx;
-    y += dy;
-    
     //Ball boundaries
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
       dx = -dx;
@@ -90,11 +86,15 @@ function run() {
     
     //Paddle movement
     if (rightKey && paddX < canvas.width - paddWidth) {
-      paddX += 7;
+      paddX += 7;      
     }
-    if (leftKey && paddX > 0) {
-      paddX -= 7;
+    else if (leftKey && paddX > 0) {
+      paddX -= 7;      
     }
+    
+    //Ball Displacement :: movement
+    x += dx;
+    y += dy;
   }
   
   function drawBall() {
@@ -163,15 +163,14 @@ function run() {
     }
   }
     
-  function collDetection() {
-    console.log("run");
+  function collDetection() {    
     for (let col = 0; col < brickColumns; col++) {
       for (let row = 0; row < brickRows; row++) {
         let b = bricks[col][row];
         
-        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {          
-          dy = -dy;
-          b.status = 0;
+        if (b.status == 1 && x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+            dy = -dy;
+            b.status = 0;        
         }
       }
     }
