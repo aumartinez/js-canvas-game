@@ -83,7 +83,8 @@ function run() {
         dy = -dy;
       }
       else {
-        alert("GAME OVER");
+        clearInterval(canvasDraw);
+        alert("GAME OVER");        
         document.location.reload();
       }
     }
@@ -185,7 +186,8 @@ function run() {
             score += 5;
             
             if ((score / 5) == brickRows * brickColumns) {
-              alert("GAME CLEARED");
+              clearInterval(canvasDraw);
+              alert("GAME CLEARED");              
               document.location.reload();
             }
         }
