@@ -52,6 +52,9 @@ function run() {
   //Score  
   let score = 0;
   
+  //Lives
+  let lives = 3;
+  
   //Canvas redraw
   let time = 10;
   let canvasDraw = setInterval(draw, time);
@@ -72,6 +75,7 @@ function run() {
     drawBricks();  
     collDetection();
     drawScore();
+    drawLives();
     
     //Ball boundaries
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
@@ -85,9 +89,20 @@ function run() {
         dy = -dy;
       }
       else {
-        clearInterval(canvasDraw);
-        alert("GAME OVER");        
-        document.location.reload();
+        //Remove one life
+        lives--;
+        
+        if (lives >= 0) {
+          //Move ball to start position
+          x = canvas.width / 2;
+          y = canvas.height - 30;
+          dy = -dy;
+        }
+        else {
+          clearInterval(canvasDraw);
+          alert("GAME OVER");
+          document.location.reload();
+        }
       }
     }
     
@@ -144,6 +159,12 @@ function run() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#8c008c";
     ctx.fillText("Score: " + score, 8, 20);
+  }
+  
+  function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#8c008c";
+    ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
   }
   
   function keyDownFn(evt) {
