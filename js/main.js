@@ -33,6 +33,7 @@ function run() {
   
   let bricks = [];
   
+  //Bricks constructor
   for (let col = 0; col < brickColumns; col++) {
     bricks[col] = [];
     for (let row = 0; row < brickRows; row++) {
