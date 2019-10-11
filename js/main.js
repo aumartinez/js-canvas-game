@@ -59,6 +59,7 @@ function run() {
   //Listeners  
   document.addEventListener("keydown", keyDownFn, false);
   document.addEventListener("keyup", keyUpFn, false);
+  document.addEventListener("mousemove", mouseMoveFn, false);
   
   //Functions  
   function draw() {
@@ -172,6 +173,14 @@ function run() {
       
       default:
       return false;
+    }
+  }
+  
+  function mouseMoveFn(evt) {
+    let relX = evt.clientX - canvas.offsetLeft;
+    
+    if (relX > paddWidth && relX < canvas.width) {
+      paddX = relX - paddWidth;
     }
   }
     
