@@ -59,10 +59,22 @@ function run() {
   let time = 10;
   let canvasDraw = setInterval(draw, time);
   
+  //Touch pad support
+  addBtns();
+  let touchMove;
+  
+  let touchLeft = document.getElementById("touchLeft");
+  let touchRight = document.getElementById("touchRight");
+    
   //Listeners  
   document.addEventListener("keydown", keyDownFn, false);
   document.addEventListener("keyup", keyUpFn, false);
-  document.addEventListener("mousemove", mouseMoveFn, false);
+  document.addEventListener("mousemove", mouseMoveFn, false);    
+    
+  touchLeft.addEventListener("touchstart", touchLeftDownFn, false);
+  touchLeft.addEventListener("touchend", touchLeftUpFn, false);
+  touchRight.addEventListener("touchstart", touchRightDownFn, false);
+  touchRight.addEventListener("touchend", touchRightUpFn, false);
   
   //Functions  
   function draw() {
@@ -197,6 +209,26 @@ function run() {
     }
   }
   
+  function touchLeftDownFn(evt) {    
+    evt.preventDefault();
+    leftKey = true;
+  }
+  
+  function touchLeftUpFn(evt) {    
+    evt.preventDefault();
+    leftKey = false;
+  }
+  
+  function touchRightDownFn(evt) {
+    evt.preventDefault();
+    rightKey = true;
+  }
+  
+  function touchRightUpFn(evt) {
+    evt.preventDefault();
+    rightKey = false;
+  }
+  
   function mouseMoveFn(evt) {
     let relX = evt.clientX - canvas.offsetLeft;
     
@@ -224,5 +256,31 @@ function run() {
         }
       }
     }
+  }
+  
+  function addBtns() {
+    let btnLeft = document.createElement("div");
+    let btnRight = document.createElement("div");
+    let scriptDiv = document.querySelector("body script");
+    
+    btnLeft.setAttribute("id", "touchLeft");
+    btnRight.setAttribute("id", "touchRight");
+    
+    btnLeft.style.position = "absolute";
+    btnLeft.style.width = "50%";
+    btnLeft.style.height = "100%";
+    btnLeft.style.left = "0";
+    btnLeft.style.top = "0";
+    btnLeft.style.zIndex = "2";
+    
+    btnRight.style.position = "absolute";
+    btnRight.style.width = "50%";
+    btnRight.style.height = "100%";
+    btnRight.style.right = "0";
+    btnRight.style.top = "0";
+    btnRight.style.zIndex = "2";
+    
+    document.body.insertBefore(btnLeft, scriptDiv);
+    document.body.insertBefore(btnRight, scriptDiv);
   }
 }
