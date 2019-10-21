@@ -61,8 +61,6 @@ function run() {
   
   //Touch pad support
   addBtns();
-  let touchMove;
-  
   let touchLeft = document.getElementById("touchLeft");
   let touchRight = document.getElementById("touchRight");
     
