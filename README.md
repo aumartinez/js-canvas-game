@@ -3,7 +3,7 @@ JS Canvas Game
 
 ## A Canvas Brick game in JS
 
-![Screenshot](imgs/screenshot-00.png)
+![Screenshot](img/screenshot-00.png)
 
 An implementation from the MDN canvas game tutorial, see a working example at:
 
