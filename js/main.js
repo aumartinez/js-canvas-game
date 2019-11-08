@@ -1,4 +1,4 @@
-//JS
+//JS Script
 
 window.addEventListener("load", run, false);
 
@@ -6,88 +6,55 @@ function run() {
   let canvas = document.getElementById("myCanvas");
   let ctx = canvas.getContext("2d");
   
-  //Start position
+  //Start position  
   let x = canvas.width / 2;
-  let y = canvas.height - 30;
+  let y = canvas.height / 2;
   
-  //Displacement differential
-  let dx = 2;
-  let dy = -2;
+  //Displacement  
+  let dx = 3;
+  let dy = 3;
   
-  //Ball  
+  let movX = 5;
+  let movY = 5;
+  
+  //Ball
   let ballRad = 8;
+  let ballHit = false;
   
-  //Paddle
-  let paddHeight = 10;
-  let paddWidth = 75;
-  let paddX = (canvas.width - paddWidth) / 2;
+  //User paddle  
+  let paddW = 10;
+  let paddH = 50;
   
-  //Bricks
-  let brickRows = 3;
-  let brickColumns = 5;
-  let brickWidth = 75;
-  let brickHeight = 20;
-  let brickPadding = 10;
-  let brickOffsetTop = 30;
-  let brickOffsetLeft = 30;
+  let paddHit = false;
   
-  let bricks = [];
+  let userX = 0;
+  let userY = (canvas.height / 2) - (paddH / 2);
   
-  //Bricks constructor
-  for (let col = 0; col < brickColumns; col++) {
-    bricks[col] = [];
-    for (let row = 0; row < brickRows; row++) {
-      bricks[col][row] = {
-        x : 0,
-        y : 0,
-        status : 1
-      };
-    }    
-  }
+  //PC paddle  
+  let pcX = canvas.width - paddW;
+  let pcY = userY;
   
-  //Controls
-  let rightKey = false;
-  let leftKey = false;
+  //Paddle movement controls init
+  let upKey = false;
+  let downKey = false;
   
-  //Score  
-  let score = 0;
-  
-  //Lives
-  let lives = 3;
+  //Listeners
+  document.addEventListener("keydown", keyDownFn, false);
+  document.addEventListener("keyup", keyUpFn, false);
   
   //Canvas redraw
   let time = 10;
   let canvasDraw = setInterval(draw, time);
   
-  //Touch pad support
-  addBtns();
-  let touchLeft = document.getElementById("touchLeft");
-  let touchRight = document.getElementById("touchRight");
-    
-  //Listeners  
-  document.addEventListener("keydown", keyDownFn, false);
-  document.addEventListener("keyup", keyUpFn, false);
-  document.addEventListener("mousemove", mouseMoveFn, false);    
-    
-  touchLeft.addEventListener("touchstart", touchLeftDownFn, false);
-  touchLeft.addEventListener("touchend", touchLeftUpFn, false);
-  touchRight.addEventListener("touchstart", touchRightDownFn, false);
-  touchRight.addEventListener("touchend", touchRightUpFn, false);
-  
-  //Functions  
   function draw() {
-    //Clear canvas
-    ctx.clearRect(0,0, canvas.width, canvas.height);
     
-    //Draw objects
-    drawBall();
-    drawPadd();
-    drawBricks();  
-    collDetection();
-    drawScore();
-    drawLives();
+    //Clear Canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    //Ball boundaries
+    //Move ball - ball limits    
+    x += dx;
+    y += dy;
+    
     if (x + dx > canvas.width - ballRad || x + dx < ballRad) {
       dx = -dx;
     }
@@ -95,96 +62,62 @@ function run() {
       dy = -dy;
     }
     else if (y + dy > canvas.height - ballRad) {
-      if (x > paddX && x < paddX + paddWidth) {
-        dy = -dy;
-      }
-      else {
-        //Remove one life
-        lives--;
-        
-        if (lives >= 0) {
-          //Move ball to start position
-          x = canvas.width / 2;
-          y = canvas.height - 30;
-          dy = -dy;
-        }
-        else {
-          clearInterval(canvasDraw);
-          alert("GAME OVER");
-          document.location.reload();
-        }
-      }
+      dy = -dy;
     }
     
-    //Paddle movement
-    if (rightKey && paddX < canvas.width - paddWidth) {
-      paddX += 7;      
+    //User Paddle movement
+    if (upKey && (userY) > 0) {
+      userY -= movY;
     }
-    else if (leftKey && paddX > 0) {
-      paddX -= 7;      
+    else if (downKey && userY < (canvas.height - paddH)) {
+      userY += movX;
     }
     
-    //Ball Displacement :: movement
-    x += dx;
-    y += dy;
-  }
+    //PC paddle movement
+    if (dy < 0 && pcY > 0) {
+      pcY -= 2;
+    }
+    else if (dy > 0 && pcY < (canvas.height - paddH)) {
+      pcY += 2;
+    }
+    
+    //Draw objects
+    drawBall(ballHit);
+    drawPadd(userX, userY, paddW, paddH, paddHit);
+    drawPadd(pcX, pcY, paddW, paddH, paddHit);
+    collDetection(x, y, userX, userY);
   
-  function drawBall() {
+  }//End draw
+  
+  function drawBall(ballHit) {
     ctx.beginPath();
     ctx.arc(x, y, ballRad, 0 * Math.PI, 2 * Math.PI);
-    ctx.fillStyle = "#8c008c";
-    ctx.fill();
-    ctx.closePath();
-  }
-  
-  function drawPadd() {
-    ctx.beginPath();
-    ctx.rect(paddX, canvas.height - paddHeight, paddWidth, paddHeight);
-    ctx.fillStyle = "#8c008c";
-    ctx.fill();
-    ctx.closePath();
-  }
-  
-  function drawBricks() {
-    for (let col = 0; col < brickColumns; col++) {
-      for (let row = 0; row < brickRows; row++) {
-        if (bricks[col][row].status == 1) {
-          let brickX = (col * (brickWidth + brickPadding)) + brickOffsetLeft;
-          let brickY = (row * (brickHeight + brickPadding)) + brickOffsetTop;
-        
-          bricks[col][row].x = brickX;
-          bricks[col][row].y = brickY;
-          
-          ctx.beginPath();
-          ctx.rect(brickX, brickY, brickWidth, brickHeight);
-          ctx.fillStyle = "#8c008c";
-          ctx.fill();
-          ctx.closePath();
-        }
-      }
+    if (ballHit) {
+      ctx.fillStyle = "red";
     }
+    else {
+      ctx.fillStyle = "#000";
+    }
+    ctx.fill();
+    ctx.closePath();
   }
   
-  function drawScore() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#8c008c";
-    ctx.fillText("Score: " + score, 8, 20);
-  }
-  
-  function drawLives() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#8c008c";
-    ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+  function drawPadd(paddX, paddY, paddW, paddH, paddHit) {
+    ctx.beginPath();
+    ctx.rect(paddX, paddY, paddW, paddH);
+    ctx.fillStyle = "#000";
+    ctx.fill();
+    ctx.closePath();
   }
   
   function keyDownFn(evt) {
     switch (evt.keyCode) {
-      case 39: //Right key
-      rightKey = true;
+      case 38: //up arrow
+      upKey = true;
       break;
       
-      case 37: //Left key
-      leftKey = true;
+      case 40: //down arrow
+      downKey = true;
       break;
       
       default:
@@ -194,12 +127,12 @@ function run() {
   
   function keyUpFn(evt) {
     switch (evt.keyCode) {
-      case 39: //Right key
-      rightKey = false;
+      case 38: //up arrow
+      upKey = false;
       break;
       
-      case 37: //Left key
-      leftKey = false;
+      case 40: //down arrow
+      downKey = false;
       break;
       
       default:
@@ -207,78 +140,21 @@ function run() {
     }
   }
   
-  function touchLeftDownFn(evt) {    
-    evt.preventDefault();
-    leftKey = true;
-  }
-  
-  function touchLeftUpFn(evt) {    
-    evt.preventDefault();
-    leftKey = false;
-  }
-  
-  function touchRightDownFn(evt) {
-    evt.preventDefault();
-    rightKey = true;
-  }
-  
-  function touchRightUpFn(evt) {
-    evt.preventDefault();
-    rightKey = false;
-  }
-  
-  function mouseMoveFn(evt) {
-    let relX = evt.clientX - canvas.offsetLeft;
-    
-    if (relX > paddWidth && relX < canvas.width) {
-      paddX = relX - paddWidth;
-    }
-  }
-    
-  function collDetection() {    
-    for (let col = 0; col < brickColumns; col++) {
-      for (let row = 0; row < brickRows; row++) {
-        let b = bricks[col][row];        
+  function collDetection(ballX, ballY, paddX, paddY) {
         
-        //Brick is hit and removed
-        if (b.status == 1 && x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-            dy = -dy;
-            b.status = 0;
-            score += 5;
-            
-            if ((score / 5) == brickRows * brickColumns) {
-              clearInterval(canvasDraw);
-              alert("GAME CLEARED");              
-              document.location.reload();
-            }
-        }
+    console.log(paddX, paddY);
+    
+  
+    if (ballX < limitX) {
+      if (ballY < limitYTop && ballY > limitYBott) {
+        console.log("hit");
       }
     }
+    else {
+      ballHit = false;
+    }
+    
+    return;
   }
   
-  function addBtns() {
-    let btnLeft = document.createElement("div");
-    let btnRight = document.createElement("div");
-    let scriptDiv = document.querySelector("body script");
-    
-    btnLeft.setAttribute("id", "touchLeft");
-    btnRight.setAttribute("id", "touchRight");
-    
-    btnLeft.style.position = "absolute";
-    btnLeft.style.width = "50%";
-    btnLeft.style.height = "100%";
-    btnLeft.style.left = "0";
-    btnLeft.style.top = "0";
-    btnLeft.style.zIndex = "2";
-    
-    btnRight.style.position = "absolute";
-    btnRight.style.width = "50%";
-    btnRight.style.height = "100%";
-    btnRight.style.right = "0";
-    btnRight.style.top = "0";
-    btnRight.style.zIndex = "2";
-    
-    document.body.insertBefore(btnLeft, scriptDiv);
-    document.body.insertBefore(btnRight, scriptDiv);
-  }
-}
+} //End run
